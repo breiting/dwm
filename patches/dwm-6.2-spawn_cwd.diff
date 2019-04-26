@@ -1,0 +1,59 @@
+diff --git a/dwm.c b/dwm.c
+index 4465af1..a549abd 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -20,9 +20,12 @@
+  *
+  * To understand everything else, start reading main().
+  */
++#include <assert.h>
+ #include <errno.h>
+ #include <locale.h>
+ #include <signal.h>
++#include <libgen.h>
++#include <sys/stat.h>
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -56,6 +59,7 @@
+ #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
+ #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
+ #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
++#define SPAWN_CWD_DELIM         " []{}()<>\"':""'"
+ 
+ /* enums */
+ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
+@@ -1644,6 +1648,33 @@ spawn(const Arg *arg)
+ 	if (fork() == 0) {
+ 		if (dpy)
+ 			close(ConnectionNumber(dpy));
++        if(selmon->sel) {
++            const char* const home = getenv("HOME");
++            assert(home && strchr(home, '/'));
++            const size_t homelen = strlen(home);
++            char *cwd, *pathbuf = NULL;
++            struct stat statbuf;
++            cwd = strtok(selmon->sel->name, SPAWN_CWD_DELIM);
++            /* NOTE: strtok() alters selmon->sel->name in-place,
++             * but that does not matter because we are going to
++             * exec() below anyway; nothing else will use it */
++            while(cwd) {
++                if(*cwd == '~') { /* replace ~ with $HOME */
++                    if(!(pathbuf = malloc(homelen + strlen(cwd)))) /* ~ counts for NULL term */
++                        die("fatal: could not malloc() %u bytes\n", homelen + strlen(cwd));
++                    strcpy(strcpy(pathbuf, home) + homelen, cwd + 1);
++                    cwd = pathbuf;
++                }
++                if(strchr(cwd, '/') && !stat(cwd, &statbuf)) {
++                    if(!S_ISDIR(statbuf.st_mode))
++                        cwd = dirname(cwd);
++                    if(!chdir(cwd))
++                        break;
++                }
++                cwd = strtok(NULL, SPAWN_CWD_DELIM);
++            }
++            free(pathbuf);
++        }
+ 		setsid();
+ 		execvp(((char **)arg->v)[0], (char **)arg->v);
+ 		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);

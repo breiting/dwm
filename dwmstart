@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#xinput --set-prop 12 'libinput Natural Scrolling Enabled' 1
+#xinput --set-prop 12 'libinput Accel Speed' -0.5
+
+dwm_status&
+
+# Start dunst (lean notification program)
+# https://wiki.archlinux.org/index.php/Dunst
+if [ -f /usr/bin/dunst ]; then
+    /usr/bin/dunst&
+fi
+
+exec dwm

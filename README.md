@@ -19,6 +19,8 @@ necessary as root):
 
     make clean install
 
+Copy the `dwm.desktop` file into `/usr/share/xsessions` so that the display
+manager can pick up the setting.
 
 # Running dwm
 

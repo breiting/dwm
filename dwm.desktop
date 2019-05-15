@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=dwm
+Comment=Tiled window manager
+TryExec=dwmstart
+Exec=dwmstart
+Type=Application

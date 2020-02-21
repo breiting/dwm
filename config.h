@@ -28,9 +28,10 @@ static const Rule rules[] =
      *  WM_CLASS(STRING) = instance, class
      *  WM_NAME(STRING) = title
      */
-    /* class      instance    title       tags mask     isfloating   monitor */
-    { "neomutt",  NULL,       NULL,       1 << 7,       0,           -1 },
-    { "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+    /* class                  instance    title       tags mask     isfloating   monitor */
+    { "neomutt"                   , NULL                        , NULL                           , 1 << 7 , 0 , -1 } ,
+    { "Firefox"                   , NULL                        , NULL                           , 1 << 8 , 0 , -1 } ,
+    { "microsoft teams - preview" , "microsoft teams - preview" , "Microsoft Teams Notification" , -1     , 1 , -1 } ,
 };
 
 /* layout(s) */
@@ -51,7 +52,7 @@ static const Layout layouts[] =
 #define XF86AudioLowerVolume    0x1008ff11
 #define XF86AudioRaiseVolume    0x1008ff13
 #define XF86LaunchB             0x1008ff4b
-#define MODKEY Mod4Mask
+#define MODKEY Mod1Mask /* Mod4 for Mac Keyboards */
 #define TAGKEYS(KEY,TAG) \
     { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
     { MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \

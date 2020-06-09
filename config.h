@@ -12,6 +12,7 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+
 static const char *colors[][3]      =
 {
     /*               fg         bg         border   */
@@ -38,6 +39,9 @@ static const Rule rules[] =
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+
+static const char scratchpadname[] = "scratchpad";
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 static const Layout layouts[] =
 {
@@ -66,9 +70,9 @@ static const Layout layouts[] =
 static char dmenumon[2]             = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]       = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenuunicode[]   = { "/home/breiting/.bin/dmenuunicode", NULL };
-static const char *termcmd[]        = { "st", NULL };
-static const char *rangercmd[]      = { "st", "-e", "ranger" };
-static const char *muttcmd[]        = { "st", "-e", "neomutt" };
+static const char *termcmd[]        = { "alacritty", NULL };
+static const char *rangercmd[]      = { "alacritty", "-e", "ranger" };
+static const char *muttcmd[]        = { "alacritty", "-e", "neomutt" };
 static const char *cmdlock[]        = { "slock", NULL };
 static const char *cmdclipmenu[]    = { "clipmenu", NULL };
 static const char *cmdenv[]         = { "environment", NULL };
@@ -82,6 +86,7 @@ static Key keys[] =
     { MODKEY,                       XK_space,                  spawn,          {.v = dmenucmd } },
     { MODKEY,                       XK_F1,                     spawn,          {.v = dmenuunicode } },
     { MODKEY,                       XK_Return,                 spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_grave,                  togglescratch,  {.v = scratchpadcmd } },
     { MODKEY,                       XK_F12,                    spawn,          {.v = cmdlock } },
     { MODKEY,                       XK_F11,                    fullscreen,     {0} },
     { MODKEY,                       XK_b,                      togglebar,      {0} },
